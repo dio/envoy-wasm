@@ -6,7 +6,7 @@
 // TODO(asraa): Remove <experimental/filesystem> and rely only on <filesystem> when Envoy requires
 // Clang >= 9.
 #if defined(_LIBCPP_VERSION) && !defined(__APPLE__)
-#include <filesystem>
+#include <experimental/filesystem>
 #elif defined __has_include
 #if __has_include(<experimental/filesystem>) && !defined(__APPLE__)
 #include <experimental/filesystem>
