@@ -12,7 +12,8 @@ class Utility {
 public:
   static void
   extractCommonAccessLogProperties(envoy::data::accesslog::v2::AccessLogCommon& common_access_log,
-                                   const StreamInfo::StreamInfo& stream_info);
+                                   const StreamInfo::StreamInfo& stream_info,
+                                   const std::string& overridden_downstream_address = "");
 
   static void responseFlagsToAccessLogResponseFlags(
       envoy::data::accesslog::v2::AccessLogCommon& common_access_log,

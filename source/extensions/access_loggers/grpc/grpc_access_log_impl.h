@@ -114,12 +114,16 @@ private:
 class GrpcAccessLoggerCacheImpl : public Singleton::Instance, public GrpcAccessLoggerCache {
 public:
   GrpcAccessLoggerCacheImpl(Grpc::AsyncClientManager& async_client_manager, Stats::Scope& scope,
-                            ThreadLocal::SlotAllocator& tls,
-                            const LocalInfo::LocalInfo& local_info);
+                            ThreadLocal::SlotAllocator& tls, const LocalInfo::LocalInfo& local_info,
+                            const std::string& overridden_downstream_ip);
 
   GrpcAccessLoggerSharedPtr
   getOrCreateLogger(const ::envoy::config::accesslog::v2::CommonGrpcAccessLogConfig& config,
                     GrpcAccessLoggerType logger_type) override;
+
+  std::string overriddenDownstreamIp() const {
+    return overridden_downstream_ip_;
+  }
 
 private:
   /**
@@ -138,6 +142,7 @@ private:
   Stats::Scope& scope_;
   ThreadLocal::SlotPtr tls_slot_;
   const LocalInfo::LocalInfo& local_info_;
+  const std::string overridden_downstream_ip_;
 };
 
 } // namespace GrpcCommon

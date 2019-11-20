@@ -3,6 +3,7 @@
 #include "envoy/upstream/upstream.h"
 
 #include "common/network/utility.h"
+#include <cstddef>
 
 namespace Envoy {
 namespace Extensions {
@@ -115,7 +116,7 @@ void Utility::responseFlagsToAccessLogResponseFlags(
 
 void Utility::extractCommonAccessLogProperties(
     envoy::data::accesslog::v2::AccessLogCommon& common_access_log,
-    const StreamInfo::StreamInfo& stream_info) {
+    const StreamInfo::StreamInfo& stream_info, const std::string& overridden_downstream_address) {
   // TODO(mattklein123): Populate sample_rate field.
   if (stream_info.downstreamRemoteAddress() != nullptr) {
     Network::Utility::addressToProtobufAddress(
@@ -131,6 +132,11 @@ void Utility::extractCommonAccessLogProperties(
     Network::Utility::addressToProtobufAddress(
         *stream_info.downstreamLocalAddress(),
         *common_access_log.mutable_downstream_local_address());
+
+    if (overridden_downstream_address != "") {
+      common_access_log.mutable_downstream_local_address()->mutable_socket_address()->set_address(
+          overridden_downstream_address);
+    }
   }
   if (stream_info.downstreamSslConnection() != nullptr) {
     auto* tls_properties = common_access_log.mutable_tls_properties();

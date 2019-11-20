@@ -46,8 +46,9 @@ void HttpGrpcAccessLog::emitLog(const Http::HeaderMap& request_headers,
   // Common log properties.
   // TODO(mattklein123): Populate sample_rate field.
   envoy::data::accesslog::v2::HTTPAccessLogEntry log_entry;
-  GrpcCommon::Utility::extractCommonAccessLogProperties(*log_entry.mutable_common_properties(),
-                                                        stream_info);
+  GrpcCommon::Utility::extractCommonAccessLogProperties(
+      *log_entry.mutable_common_properties(), stream_info,
+      access_logger_cache_->overriddenDownstreamIp());
 
   if (stream_info.protocol()) {
     switch (stream_info.protocol().value()) {
