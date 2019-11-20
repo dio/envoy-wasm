@@ -64,6 +64,8 @@ public:
   virtual GrpcAccessLoggerSharedPtr
   getOrCreateLogger(const ::envoy::config::accesslog::v2::CommonGrpcAccessLogConfig& config,
                     GrpcAccessLoggerType logger_type) PURE;
+
+  std::string overriddenDownstreamIp() const { return ""; }
 };
 
 using GrpcAccessLoggerCacheSharedPtr = std::shared_ptr<GrpcAccessLoggerCache>;
