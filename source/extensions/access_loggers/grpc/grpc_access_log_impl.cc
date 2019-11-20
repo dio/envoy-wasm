@@ -88,9 +88,9 @@ void GrpcAccessLoggerImpl::flush() {
 GrpcAccessLoggerCacheImpl::GrpcAccessLoggerCacheImpl(Grpc::AsyncClientManager& async_client_manager,
                                                      Stats::Scope& scope,
                                                      ThreadLocal::SlotAllocator& tls,
-                                                     const LocalInfo::LocalInfo& local_info)
+                                                     const LocalInfo::LocalInfo& local_info, const std::string& overridden_downstream_ip)
     : async_client_manager_(async_client_manager), scope_(scope), tls_slot_(tls.allocateSlot()),
-      local_info_(local_info) {
+      local_info_(local_info), overridden_downstream_ip_(overridden_downstream_ip) {
   tls_slot_->set(
       [](Event::Dispatcher& dispatcher) { return std::make_shared<ThreadLocalCache>(dispatcher); });
 }
