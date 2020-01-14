@@ -182,7 +182,7 @@ void CheckRequestUtils::createHttpCheck(
 }
 
 void CheckRequestUtils::createTcpCheck(const Network::ReadFilterCallbacks* callbacks,
-                                       envoy::config::core::v3alpha::Metadata&& metadata_context,
+                                       envoy::api::v2::core::Metadata&& metadata_context,
                                        envoy::service::auth::v2::CheckRequest& request,
                                        bool include_peer_certificate) {
 

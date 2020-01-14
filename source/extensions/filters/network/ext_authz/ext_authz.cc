@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-#include "envoy/config/core/v3alpha/base.pb.h"
+#include "envoy/api/v2/core/base.pb.h"
 #include "envoy/stats/scope.h"
 
 #include "common/common/assert.h"
@@ -22,7 +22,7 @@ InstanceStats Config::generateStats(const std::string& name, Stats::Scope& scope
 
 void Filter::callCheck() {
   // If metadata_context_namespaces is specified, pass matching metadata to the ext_authz service
-  envoy::config::core::v3alpha::Metadata metadata_context;
+  envoy::api::v2::core::Metadata metadata_context;
   const auto& request_metadata =
       filter_callbacks_->connection().streamInfo().dynamicMetadata().filter_metadata();
   for (const auto& context_key : config_->metadataContextNamespaces()) {
