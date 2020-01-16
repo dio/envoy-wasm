@@ -51,12 +51,13 @@ Network::FilterStatus Filter::onData(Buffer::Instance&, bool /* end_stream */) {
     // sufficient information to fill out the checkRequest_.
     callCheck();
   }
-  return filter_return_ == FilterReturn::Stop ? Network::FilterStatus::StopIteration
-                                              : Network::FilterStatus::Continue;
+  return (status_ == Status::Calling || filter_return_ == FilterReturn::Stop)
+             ? Network::FilterStatus::StopIteration
+             : Network::FilterStatus::Continue;
 }
 
 Network::FilterStatus Filter::onNewConnection() {
-  // Wait till onData() happens.
+  // Wait until onData() happens.
   return Network::FilterStatus::Continue;
 }
 
@@ -94,6 +95,7 @@ void Filter::onComplete(Filters::Common::ExtAuthz::ResponsePtr&& response) {
        !config_->failureModeAllow())) {
     config_->stats().cx_closed_.inc();
     filter_callbacks_->connection().close(Network::ConnectionCloseType::NoFlush);
+    filter_return_ = FilterReturn::Stop;
   } else {
     // Let the filter chain continue.
     filter_return_ = FilterReturn::Continue;
