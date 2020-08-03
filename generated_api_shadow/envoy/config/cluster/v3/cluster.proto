@@ -44,7 +44,7 @@ message ClusterCollection {
 }
 
 // Configuration for a single upstream cluster.
-// [#next-free-field: 51]
+// [#next-free-field: 52]
 message Cluster {
   option (udpa.annotations.versioning).previous_message_type = "envoy.api.v2.Cluster";
 
@@ -762,6 +762,10 @@ message Cluster {
   // [#next-major-version: Reconcile DNS options in a single message.]
   // Always use TCP queries instead of UDP queries for DNS lookups.
   bool use_tcp_for_dns_lookups = 45;
+
+  // Use the default search domains for DNS lookups. Setting this to false the lookups will only
+  // query hostnames as-is or as aliases.
+  google.protobuf.BoolValue use_default_search_domains_for_dns_lookups = 51;
 
   // If specified, outlier detection will be enabled for this upstream cluster.
   // Each of the configuration values can be overridden via

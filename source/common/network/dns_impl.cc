@@ -22,10 +22,11 @@ namespace Network {
 DnsResolverImpl::DnsResolverImpl(
     Event::Dispatcher& dispatcher,
     const std::vector<Network::Address::InstanceConstSharedPtr>& resolvers,
-    const bool use_tcp_for_dns_lookups)
+    const bool use_tcp_for_dns_lookups, const bool use_default_search_domains_for_dns_lookups)
     : dispatcher_(dispatcher),
       timer_(dispatcher.createTimer([this] { onEventCallback(ARES_SOCKET_BAD, 0); })),
-      use_tcp_for_dns_lookups_(use_tcp_for_dns_lookups) {
+      use_tcp_for_dns_lookups_(use_tcp_for_dns_lookups),
+      use_default_search_domains_for_dns_lookups_(use_default_search_domains_for_dns_lookups) {
 
   AresOptions options = defaultAresOptions();
   initializeChannel(&options.options_, options.optmask_);
@@ -66,6 +67,11 @@ DnsResolverImpl::AresOptions DnsResolverImpl::defaultAresOptions() {
   if (use_tcp_for_dns_lookups_) {
     options.optmask_ |= ARES_OPT_FLAGS;
     options.options_.flags |= ARES_FLAG_USEVC;
+  }
+
+  if (!use_default_search_domains_for_dns_lookups_) {
+    // Only query hostnames as-is or as aliases.
+    options.options_.flags |= ARES_FLAG_NOSEARCH;
   }
 
   return options;

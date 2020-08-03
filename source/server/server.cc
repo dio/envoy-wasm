@@ -475,7 +475,10 @@ void InstanceImpl::initialize(const Options& options,
   ssl_context_manager_ = createContextManager("ssl_context_manager", time_source_);
 
   const bool use_tcp_for_dns_lookups = bootstrap_.use_tcp_for_dns_lookups();
-  dns_resolver_ = dispatcher_->createDnsResolver({}, use_tcp_for_dns_lookups);
+  const bool use_default_search_domains_for_dns_lookups =
+      PROTOBUF_GET_WRAPPED_OR_DEFAULT(bootstrap_, use_default_search_domains_for_dns_lookups, true);
+  dns_resolver_ = dispatcher_->createDnsResolver({}, use_tcp_for_dns_lookups,
+                                                 use_default_search_domains_for_dns_lookups);
 
   cluster_manager_factory_ = std::make_unique<Upstream::ProdClusterManagerFactory>(
       *admin_, Runtime::LoaderSingleton::get(), stats_store_, thread_local_, *random_generator_,

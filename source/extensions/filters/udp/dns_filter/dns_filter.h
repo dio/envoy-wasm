@@ -89,6 +89,9 @@ public:
   uint64_t retryCount() const { return retry_count_; }
   Random::RandomGenerator& random() const { return random_; }
   uint64_t maxPendingLookups() const { return max_pending_lookups_; }
+  bool useDefaultSearchDomainsForDnsLookups() const {
+    return use_default_search_domains_for_dns_lookups_;
+  }
 
 private:
   static DnsFilterStats generateStats(const std::string& stat_prefix, Stats::Scope& scope) {
@@ -116,6 +119,7 @@ private:
   std::chrono::milliseconds resolver_timeout_;
   Random::RandomGenerator& random_;
   uint64_t max_pending_lookups_;
+  const bool use_default_search_domains_for_dns_lookups_;
 };
 
 using DnsFilterEnvoyConfigSharedPtr = std::shared_ptr<const DnsFilterEnvoyConfig>;

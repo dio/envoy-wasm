@@ -28,7 +28,8 @@ class DnsResolverImpl : public DnsResolver, protected Logger::Loggable<Logger::I
 public:
   DnsResolverImpl(Event::Dispatcher& dispatcher,
                   const std::vector<Network::Address::InstanceConstSharedPtr>& resolvers,
-                  const bool use_tcp_for_dns_lookups);
+                  const bool use_tcp_for_dns_lookups,
+                  const bool use_default_search_domains_for_dns_lookups);
   ~DnsResolverImpl() override;
 
   // Network::DnsResolver
@@ -104,6 +105,7 @@ private:
   ares_channel channel_;
   bool dirty_channel_{};
   const bool use_tcp_for_dns_lookups_;
+  const bool use_default_search_domains_for_dns_lookups_;
   absl::node_hash_map<int, Event::FileEventPtr> events_;
 };
 

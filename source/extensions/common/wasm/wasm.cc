@@ -196,7 +196,8 @@ Word resolve_dns(void* raw_context, Word dns_address_ptr, Word dns_address_size,
     root_context->onResolveDns(token, status, std::move(response));
   };
   if (!context->wasm()->dnsResolver()) {
-    context->wasm()->dnsResolver() = context->wasm()->dispatcher().createDnsResolver({}, false);
+    context->wasm()->dnsResolver() = context->wasm()->dispatcher().createDnsResolver(
+        {}, false, /*use_default_search_domains_for_dns_lookups=*/false);
   }
   context->wasm()->dnsResolver()->resolve(std::string(path.value()), Network::DnsLookupFamily::Auto,
                                           callback);

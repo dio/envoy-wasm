@@ -7,6 +7,7 @@ import "envoy/config/core/v3/base.proto";
 import "envoy/data/dns/v3/dns_table.proto";
 
 import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
 
 import "udpa/annotations/status.proto";
 import "validate/validate.proto";
@@ -73,4 +74,8 @@ message DnsFilterConfig {
   // resolvers to answer a query. This object is optional and if omitted instructs
   // the filter to resolve queries from the data in the server_config
   ClientContextConfig client_config = 3;
+
+  // Use the default search domains for DNS lookups. Setting this to false the lookups will only
+  // query hostnames as-is or as aliases.
+  google.protobuf.BoolValue use_default_search_domains_for_dns_lookups = 4;
 }

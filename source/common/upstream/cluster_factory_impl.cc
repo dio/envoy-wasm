@@ -96,7 +96,10 @@ ClusterFactoryImplBase::selectDnsResolver(const envoy::config::cluster::v3::Clus
       resolvers.push_back(Network::Address::resolveProtoAddress(resolver_addr));
     }
     const bool use_tcp_for_dns_lookups = cluster.use_tcp_for_dns_lookups();
-    return context.dispatcher().createDnsResolver(resolvers, use_tcp_for_dns_lookups);
+    const bool use_default_search_domains_for_dns_lookups =
+        PROTOBUF_GET_WRAPPED_OR_DEFAULT(cluster, use_default_search_domains_for_dns_lookups, true);
+    return context.dispatcher().createDnsResolver(resolvers, use_tcp_for_dns_lookups,
+                                                  use_default_search_domains_for_dns_lookups);
   }
 
   return context.dnsResolver();

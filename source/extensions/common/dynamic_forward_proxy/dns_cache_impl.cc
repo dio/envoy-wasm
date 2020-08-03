@@ -20,7 +20,10 @@ DnsCacheImpl::DnsCacheImpl(
     const envoy::extensions::common::dynamic_forward_proxy::v3::DnsCacheConfig& config)
     : main_thread_dispatcher_(main_thread_dispatcher),
       dns_lookup_family_(Upstream::getDnsLookupFamilyFromEnum(config.dns_lookup_family())),
-      resolver_(main_thread_dispatcher.createDnsResolver({}, config.use_tcp_for_dns_lookups())),
+      resolver_(main_thread_dispatcher.createDnsResolver(
+          {}, config.use_tcp_for_dns_lookups(),
+          PROTOBUF_GET_WRAPPED_OR_DEFAULT(config, use_default_search_domains_for_dns_lookups,
+                                          true))),
       tls_slot_(tls.allocateSlot()),
       scope_(root_scope.createScope(fmt::format("dns_cache.{}.", config.name()))),
       stats_(generateDnsCacheStats(*scope_)),

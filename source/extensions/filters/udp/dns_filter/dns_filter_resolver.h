@@ -20,9 +20,9 @@ class DnsFilterResolver : Logger::Loggable<Logger::Id::filter> {
 public:
   DnsFilterResolver(DnsFilterResolverCallback& callback, AddressConstPtrVec resolvers,
                     std::chrono::milliseconds timeout, Event::Dispatcher& dispatcher,
-                    uint64_t max_pending_lookups)
+                    uint64_t max_pending_lookups, bool use_default_search_domains)
       : dispatcher_(dispatcher),
-        resolver_(dispatcher.createDnsResolver(resolvers, false /* use_tcp_for_dns_lookups */)),
+        resolver_(dispatcher.createDnsResolver(resolvers, false /* use_tcp_for_dns_lookups */, use_default_search_domains)),
         callback_(callback), timeout_(timeout), max_pending_lookups_(max_pending_lookups) {}
   /**
    * @brief entry point to resolve the name in a DnsQueryRecord

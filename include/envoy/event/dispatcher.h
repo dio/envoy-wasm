@@ -120,11 +120,14 @@ public:
    * empty, it will not use any specific resolvers, but use defaults (/etc/resolv.conf)
    * @param use_tcp_for_dns_lookups if set to true, tcp will be used to perform dns lookups.
    * Otherwise, udp is used.
+   * @param use_default_search_domains_for_dns_lookups if set to true, resolver uses the default
+   * search domains. Otherwise it queries hostnames as-is or as aliases.
    * @return Network::DnsResolverSharedPtr that is owned by the caller.
    */
   virtual Network::DnsResolverSharedPtr
   createDnsResolver(const std::vector<Network::Address::InstanceConstSharedPtr>& resolvers,
-                    bool use_tcp_for_dns_lookups) PURE;
+                    bool use_tcp_for_dns_lookups,
+                    bool use_default_search_domains_for_dns_lookups) PURE;
 
   /**
    * Creates a file event that will signal when a file is readable or writable. On UNIX systems this

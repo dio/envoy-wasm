@@ -19,7 +19,11 @@ DnsFilterEnvoyConfig::DnsFilterEnvoyConfig(
     Server::Configuration::ListenerFactoryContext& context,
     const envoy::extensions::filters::udp::dns_filter::v3alpha::DnsFilterConfig& config)
     : root_scope_(context.scope()), cluster_manager_(context.clusterManager()), api_(context.api()),
-      stats_(generateStats(config.stat_prefix(), root_scope_)), random_(context.random()) {
+      stats_(generateStats(config.stat_prefix(), root_scope_)), random_(context.random()),
+      // This should be: PROTOBUF_GET_WRAPPED_OR_DEFAULT(config,
+      // use_default_search_domains_for_dns_lookups, true) But, we set false here for testing
+      // purpose.
+      use_default_search_domains_for_dns_lookups_(false) {
   using envoy::extensions::filters::udp::dns_filter::v3alpha::DnsFilterConfig;
 
   const auto& server_config = config.server_config();
@@ -152,9 +156,9 @@ DnsFilter::DnsFilter(Network::UdpReadFilterCallbacks& callbacks,
     sendDnsResponse(std::move(context));
   };
 
-  resolver_ = std::make_unique<DnsFilterResolver>(resolver_callback_, config->resolvers(),
-                                                  config->resolverTimeout(), listener_.dispatcher(),
-                                                  config->maxPendingLookups());
+  resolver_ = std::make_unique<DnsFilterResolver>(
+      resolver_callback_, config->resolvers(), config->resolverTimeout(), listener_.dispatcher(),
+      config->maxPendingLookups(), config->useDefaultSearchDomainsForDnsLookups());
 }
 
 void DnsFilter::onData(Network::UdpRecvData& client_request) {

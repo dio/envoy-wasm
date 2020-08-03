@@ -27,7 +27,7 @@ message DnsCacheCircuitBreakers {
 
 // Configuration for the dynamic forward proxy DNS cache. See the :ref:`architecture overview
 // <arch_overview_http_dynamic_forward_proxy>` for more information.
-// [#next-free-field: 9]
+// [#next-free-field: 10]
 message DnsCacheConfig {
   option (udpa.annotations.versioning).previous_message_type =
       "envoy.config.common.dynamic_forward_proxy.v2alpha.DnsCacheConfig";
@@ -99,4 +99,8 @@ message DnsCacheConfig {
   // [#next-major-version: Reconcile DNS options in a single message.]
   // Always use TCP queries instead of UDP queries for DNS lookups.
   bool use_tcp_for_dns_lookups = 8;
+
+  // Use the default search domains for DNS lookups. Setting this to false the lookups will only
+  // query hostnames as-is or as aliases.
+  google.protobuf.BoolValue use_default_search_domains_for_dns_lookups = 9;
 }
